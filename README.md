@@ -36,7 +36,7 @@
 
 ### The Fast and Simple Face Swap Extension Node for ComfyUI, based on [ReActor](https://github.com/Gourieff/sd-webui-reactor) SD-WebUI Face Swap Extension
 
-> This Node goes without NSFW filter (uncensored, use it on your own [responsibility](#disclaimer)) 
+> By using this Node you understand the [responsibility](#disclaimer)) 
 
 <div align="center">
 

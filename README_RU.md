@@ -36,7 +36,7 @@
 
 ### Нод (node) для быстрой и простой замены лиц на любых изображениях для работы с ComfyUI, основан на [ReActor](https://github.com/Gourieff/sd-webui-reactor) SD-WebUI Face Swap Extension
 
-> Данный Нод идёт без фильтра цензуры (18+, используйте под вашу собственную [ответственность](#disclaimer)) 
+> Используя данный Нод, вы принимаете [ответственность](#disclaimer)
 
 <div align="center">
 
