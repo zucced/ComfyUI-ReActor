@@ -47,10 +47,6 @@
 
 </div>
 
-<div align="center">
-  <img src="https://github.com/Gourieff/Assets/blob/main/comfyui-reactor-node/uploads/demo.gif?raw=true" alt="logo" width="100%"/>
-</div>
-
 <a name="latestupdate">
 
 ## Что нового в последнем обновлении
