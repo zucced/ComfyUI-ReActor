@@ -59,15 +59,31 @@ import scripts.r_masking.subcore as subcore
 import scripts.r_masking.core as core
 import scripts.r_masking.segs as masking_segs
 
+import scripts.reactor_sfw as sfw
+
 
 models_dir = folder_paths.models_dir
 REACTOR_MODELS_PATH = os.path.join(models_dir, "reactor")
 FACE_MODELS_PATH = os.path.join(REACTOR_MODELS_PATH, "faces")
+NSFWDET_MODEL_PATH = os.path.join(models_dir, "nsfw_detector","vit-base-nsfw-detector")
 
 if not os.path.exists(REACTOR_MODELS_PATH):
     os.makedirs(REACTOR_MODELS_PATH)
     if not os.path.exists(FACE_MODELS_PATH):
         os.makedirs(FACE_MODELS_PATH)
+
+if not os.path.exists(NSFWDET_MODEL_PATH):
+    os.makedirs(NSFWDET_MODEL_PATH)
+    nd_urls = [
+        "https://huggingface.co/AdamCodd/vit-base-nsfw-detector/resolve/main/config.json",
+        "https://huggingface.co/AdamCodd/vit-base-nsfw-detector/resolve/main/confusion_matrix.png",
+        "https://huggingface.co/AdamCodd/vit-base-nsfw-detector/resolve/main/model.safetensors",
+        "https://huggingface.co/AdamCodd/vit-base-nsfw-detector/resolve/main/preprocessor_config.json",
+    ]
+    for model_url in nd_urls:
+        model_name = os.path.basename(model_url)
+        model_path = os.path.join("vit-base-nsfw-detector", model_name)
+        download(model_url, model_path, model_name)
 
 dir_facerestore_models = os.path.join(models_dir, "facerestore_models")
 os.makedirs(dir_facerestore_models, exist_ok=True)
@@ -100,8 +116,6 @@ def get_restorers():
             "https://huggingface.co/datasets/Gourieff/ReActor/resolve/main/models/facerestore_models/GFPGANv1.4.pth",
             "https://huggingface.co/datasets/Gourieff/ReActor/resolve/main/models/facerestore_models/codeformer-v0.1.0.pth",
             "https://huggingface.co/datasets/Gourieff/ReActor/resolve/main/models/facerestore_models/GPEN-BFR-512.onnx",
-            "https://huggingface.co/datasets/Gourieff/ReActor/resolve/main/models/facerestore_models/GPEN-BFR-1024.onnx",
-            "https://huggingface.co/datasets/Gourieff/ReActor/resolve/main/models/facerestore_models/GPEN-BFR-2048.onnx",
         ]
         for model_url in fr_urls:
             model_name = os.path.basename(model_url)
@@ -345,41 +359,58 @@ class reactor:
         
         script = FaceSwapScript()
         pil_images = batch_tensor_to_pil(input_image)
-        if source_image is not None:
-            source = tensor_to_pil(source_image)
-        else:
-            source = None
-        p = StableDiffusionProcessingImg2Img(pil_images)
-        script.process(
-            p=p,
-            img=source,
-            enable=True,
-            source_faces_index=source_faces_index,
-            faces_index=input_faces_index,
-            model=swap_model,
-            swap_in_source=True,
-            swap_in_generated=True,
-            gender_source=detect_gender_source,
-            gender_target=detect_gender_input,
-            face_model=face_model,
-            faces_order=faces_order,
-            # face boost:
-            face_boost_enabled=self.face_boost_enabled,
-            face_restore_model=self.boost_model,
-            face_restore_visibility=self.boost_model_visibility,
-            codeformer_weight=self.boost_cf_weight,
-            interpolation=self.interpolation,
-        )
-        result = batched_pil_to_tensor(p.init_images)
 
-        if face_model is None:
-            current_face_model = get_current_faces_model()
-            face_model_to_provide = current_face_model[0] if (current_face_model is not None and len(current_face_model) > 0) else face_model
-        else:
-            face_model_to_provide = face_model
+        # NSFW checker
+        pil_images_sfw = []
+        for img in pil_images:
+            img.save("tmp.png")
+            if not sfw.nsfw_image("tmp.png",NSFWDET_MODEL_PATH):
+                pil_images_sfw.append(img)
+        pil_images = pil_images_sfw
+        # # #
 
-        if self.restore or not self.face_boost_enabled:
-            result = reactor.restore_face(self,result,face_restore_model,face_restore_visibility,codeformer_weight,facedetection)
+        if len(pil_images) > 0:
+
+            if source_image is not None:
+                source = tensor_to_pil(source_image)
+            else:
+                source = None
+            p = StableDiffusionProcessingImg2Img(pil_images)
+            script.process(
+                p=p,
+                img=source,
+                enable=True,
+                source_faces_index=source_faces_index,
+                faces_index=input_faces_index,
+                model=swap_model,
+                swap_in_source=True,
+                swap_in_generated=True,
+                gender_source=detect_gender_source,
+                gender_target=detect_gender_input,
+                face_model=face_model,
+                faces_order=faces_order,
+                # face boost:
+                face_boost_enabled=self.face_boost_enabled,
+                face_restore_model=self.boost_model,
+                face_restore_visibility=self.boost_model_visibility,
+                codeformer_weight=self.boost_cf_weight,
+                interpolation=self.interpolation,
+            )
+            result = batched_pil_to_tensor(p.init_images)
+
+            if face_model is None:
+                current_face_model = get_current_faces_model()
+                face_model_to_provide = current_face_model[0] if (current_face_model is not None and len(current_face_model) > 0) else face_model
+            else:
+                face_model_to_provide = face_model
+
+            if self.restore or not self.face_boost_enabled:
+                result = reactor.restore_face(self,result,face_restore_model,face_restore_visibility,codeformer_weight,facedetection)
+        
+        else:
+            image_black = Image.new("RGB", (512, 512))
+            result = batched_pil_to_tensor([image_black])
+            face_model_to_provide = None
 
         return (result,face_model_to_provide)
 

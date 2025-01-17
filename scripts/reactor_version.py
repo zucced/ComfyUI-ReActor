@@ -1,5 +1,5 @@
 app_title = "ReActor Node for ComfyUI"
-version_flag = "v0.5.2-a2"
+version_flag = "v0.5.2-a3"
 
 COLORS = {
     "CYAN": "\033[0;36m",  # CYAN
@@ -10,4 +10,4 @@ COLORS = {
     "0": "\033[0m",  # RESET COLOR
 }
 
-print(f"{COLORS['YELLOW']}[ReActor]{COLORS['0']} - {COLORS['ORANGE']}STATUS{COLORS['0']} - {COLORS['GREEN']}Running {version_flag} in ComfyUI{COLORS['0']}")
+print(f"\n{COLORS['YELLOW']}[ReActor]{COLORS['0']} - {COLORS['ORANGE']}STATUS{COLORS['0']} - {COLORS['GREEN']}Running {version_flag} in ComfyUI{COLORS['0']}")
