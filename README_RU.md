@@ -51,6 +51,17 @@
 
 ## Что нового в последнем обновлении
 
+### 0.5.2 <sub><sup>BETA1</sup></sub>
+
+- Поддержка моделей ReSwapper. Несмотря на то, что Inswapper по-прежнему даёт лучшее сходство, но ReSwapper развивается - спасибо @somanchiu https://github.com/somanchiu/ReSwapper за эти модели и проект ReSwapper! Это хороший шаг для Сообщества в создании альтернативы Инсваппера!
+
+<img src="https://github.com/Gourieff/Assets/blob/main/comfyui-reactor-node/0.5.2-whatsnew-03.jpg?raw=true" alt="0.5.2-whatsnew-03" width="100%"/>
+<img src="https://github.com/Gourieff/Assets/blob/main/comfyui-reactor-node/0.5.2-whatsnew-04.jpg?raw=true" alt="0.5.2-whatsnew-04" width="100%"/>
+
+Скачать модели ReSwapper можно отсюда:
+https://huggingface.co/datasets/Gourieff/ReActor/tree/main/models
+Сохраните их в директорию "models/reswapper".
+
 ### 0.5.2 <sub><sup>ALPHA3</sup></sub>
 
 - NSFW-детектор, чтобы не нарушать [правила GitHub](https://docs.github.com/en/site-policy/acceptable-use-policies/github-misinformation-and-disinformation#synthetic--manipulated-media-tools)
