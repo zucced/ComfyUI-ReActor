@@ -34,7 +34,7 @@
 
 </div>
 
-### The Fast and Simple Face Swap Extension Node for ComfyUI, based on [disabled ReActor](https://github.com/Gourieff/comfyui-reactor-node) - now it goes with NSFW detector
+### The Fast and Simple Face Swap Extension Node for ComfyUI, based on [blocked ReActor](https://github.com/Gourieff/comfyui-reactor-node) - now it goes with NSFW detector
 
 > By using this Node you understand the [responsibility](#disclaimer)) 
 
