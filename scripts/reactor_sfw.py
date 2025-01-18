@@ -7,7 +7,7 @@ SCORE = 0.85
 logging.getLogger('transformers').setLevel(logging.ERROR)
 
 def nsfw_image(img_path: str, model_path: str):
-    img = Image.open(img_path)
-    predict = pipeline("image-classification", model=model_path)
-    result = predict(img)
-    return True if result[0]["score"] > SCORE else False
+    with Image.open(img_path) as img:
+        predict = pipeline("image-classification", model=model_path)
+        result = predict(img)
+        return True if result[0]["score"] > SCORE else False

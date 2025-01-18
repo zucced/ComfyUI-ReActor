@@ -361,11 +361,18 @@ class reactor:
         pil_images = batch_tensor_to_pil(input_image)
 
         # NSFW checker
+        logger.status("Checking for any unsafe content")
         pil_images_sfw = []
+        tmp_img = "reactor_tmp.png"
         for img in pil_images:
-            img.save("tmp.png")
-            if not sfw.nsfw_image("tmp.png",NSFWDET_MODEL_PATH):
+            if state.interrupted or model_management.processing_interrupted():
+                logger.status("Interrupted by User")
+                break
+            img.save(tmp_img)
+            if not sfw.nsfw_image(tmp_img, NSFWDET_MODEL_PATH):
                 pil_images_sfw.append(img)
+        if os.path.exists(tmp_img):
+            os.remove(tmp_img)
         pil_images = pil_images_sfw
         # # #
 
