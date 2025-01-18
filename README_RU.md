@@ -34,7 +34,7 @@
 
 </div>
 
-### Нод (node) для быстрой и простой замены лиц на любых изображениях для работы с ComfyUI, основан на [ReActor](https://github.com/Gourieff/sd-webui-reactor) SD-WebUI Face Swap Extension
+### Нод (node) для быстрой и простой замены лиц на любых изображениях для работы с ComfyUI, основан на [заблокированном ранее РеАкторе](https://github.com/Gourieff/comfyui-reactor-node) - теперь нод имеет встроенный NSFW-детектор
 
 > Используя данный Нод, вы принимаете [ответственность](#disclaimer)
 
@@ -51,11 +51,24 @@
 
 ## Что нового в последнем обновлении
 
+### 0.5.2 <sub><sup>ALPHA3</sup></sub>
+
+- NSFW-детектор, чтобы не нарушать [правила GitHub](https://docs.github.com/en/site-policy/acceptable-use-policies/github-misinformation-and-disinformation#synthetic--manipulated-media-tools)
+
+### 0.5.2 <sub><sup>ALPHA2</sup></sub>
+
+- Небольшие исправления
+
 ### 0.5.2 <sub><sup>ALPHA1</sup></sub>
 
 - Новый нод "Unload ReActor Models" - полезен для сложных воркфлоу, когда вам нужно освободить ОЗУ, занятую РеАктором
+
+<img src="https://github.com/Gourieff/Assets/blob/main/comfyui-reactor-node/0.5.2-whatsnew-01.jpg?raw=true" alt="0.5.2-whatsnew-01" width="100%"/>
+
 - Поддержка ORT CoreML and ROCM EPs, достаточно установить ту версию onnxruntime, которая соответствует вашему GPU
 - Некоторые улучшения скрипта установки для поддержки последней версии ORT-GPU
+
+<img src="https://github.com/Gourieff/Assets/blob/main/comfyui-reactor-node/0.5.2-whatsnew-02.jpg?raw=true" alt="0.5.2-whatsnew-02" width="50%"/>
 
 <details>
 	<summary><a>Предыдущие версии</a></summary>

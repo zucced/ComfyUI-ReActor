@@ -34,7 +34,7 @@
 
 </div>
 
-### The Fast and Simple Face Swap Extension Node for ComfyUI, based on [ReActor](https://github.com/Gourieff/sd-webui-reactor) SD-WebUI Face Swap Extension
+### The Fast and Simple Face Swap Extension Node for ComfyUI, based on [disabled ReActor](https://github.com/Gourieff/comfyui-reactor-node) - now it goes with NSFW detector
 
 > By using this Node you understand the [responsibility](#disclaimer)) 
 
@@ -51,11 +51,24 @@
 
 ## What's new in the latest update
 
+### 0.5.2 <sub><sup>ALPHA3</sup></sub>
+
+- NSFW-detector to not violate [GitHub rules](https://docs.github.com/en/site-policy/acceptable-use-policies/github-misinformation-and-disinformation#synthetic--manipulated-media-tools)
+
+### 0.5.2 <sub><sup>ALPHA2</sup></sub>
+
+- Minor fixes
+
 ### 0.5.2 <sub><sup>ALPHA1</sup></sub>
 
 - New node "Unload ReActor Models" - is useful for complex WFs when you need to free some VRAM utilized by ReActor
+
+<img src="https://github.com/Gourieff/Assets/blob/main/comfyui-reactor-node/0.5.2-whatsnew-01.jpg?raw=true" alt="0.5.2-whatsnew-01" width="100%"/>
+
 - Support of ORT CoreML and ROCM EPs, just install onnxruntime version you need
 - Install script improvements to install latest versions of ORT-GPU
+
+<img src="https://github.com/Gourieff/Assets/blob/main/comfyui-reactor-node/0.5.2-whatsnew-02.jpg?raw=true" alt="0.5.2-whatsnew-02" width="50%"/>
 
 <details>
 	<summary><a>Previous versions</a></summary>
