@@ -30,13 +30,13 @@
 
   English | [Русский](/README_RU.md)
 
-# ReActor Node for ComfyUI
+# ReActor Nodes for ComfyUI<br><sub><sup>-=SFW-Friendly=-</sup></sub>
 
 </div>
 
-### The Fast and Simple Face Swap Extension Node for ComfyUI, based on [blocked ReActor](https://github.com/Gourieff/comfyui-reactor-node) - now it goes with NSFW detector
+### The Fast and Simple Face Swap Extension Nodes for ComfyUI, based on [blocked ReActor](https://github.com/Gourieff/comfyui-reactor-node) - now it has a nudity detector to avoid using this software with 18+ content
 
-> By using this Node you understand the [responsibility](#disclaimer)) 
+> By using this Node you accept and assume [responsibility](#disclaimer)) 
 
 <div align="center">
 
