@@ -82,7 +82,7 @@ if not os.path.exists(NSFWDET_MODEL_PATH):
     ]
     for model_url in nd_urls:
         model_name = os.path.basename(model_url)
-        model_path = os.path.join("vit-base-nsfw-detector", model_name)
+        model_path = os.path.join(NSFWDET_MODEL_PATH, model_name)
         download(model_url, model_path, model_name)
 
 dir_facerestore_models = os.path.join(models_dir, "facerestore_models")
