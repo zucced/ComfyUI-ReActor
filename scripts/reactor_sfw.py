@@ -18,7 +18,7 @@ def ensure_nsfw_model(nsfwdet_model_path):
             model_path = os.path.join(nsfwdet_model_path, model_name)
             download(model_url, model_path, model_name)
 
-SCORE = 0.965 # 0.965 and less - is safety content
+SCORE = 0.972
 
 logging.getLogger('transformers').setLevel(logging.ERROR)
 
