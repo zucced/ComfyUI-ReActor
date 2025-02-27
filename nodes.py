@@ -497,6 +497,83 @@ class LoadFaceModel:
         return (out, )
 
 
+class ReActorWeight:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {
+            "required": {
+                "input_image": ("IMAGE",),
+                "source_image": ("IMAGE",),
+                "faceswap_weight": ("INT", {"default": 50, "min": 10, "max": 100, "step": 10}),
+            }
+        }
+    
+    RETURN_TYPES = ("IMAGE","FACE_MODEL")
+    RETURN_NAMES = ("INPUT_IMAGE","FACE_MODEL")
+    FUNCTION = "set_weight"
+
+    OUTPUT_NODE = True
+
+    CATEGORY = "🌌 ReActor"
+
+    def set_weight(self, input_image, source_image, faceswap_weight):
+        weight = faceswap_weight
+        # print(f"weight = {weight}")
+        if weight == 100:
+            images = [source_image]
+        else:
+            if weight > 50:
+                images = [input_image]
+                count = round(100/(100-weight))
+            else:
+                images = [source_image]
+                count = round(100/(weight))
+            print(f"count = {count}")
+            for i in range(count-2):
+                if weight > 50:
+                    images.append(source_image)
+                else:
+                    images.append(input_image)
+        
+        faces = []
+        embeddings = []
+        images_list: List[Image.Image] = []
+
+        apply_patch(1)
+
+        for image in images:
+            img = tensor_to_pil(image)
+            images_list.append(img)
+
+        for image in images_list:
+            face = BuildFaceModel.build_face_model(self,image)
+            if isinstance(face, str):
+                continue
+            faces.append(face)
+            embeddings.append(face.embedding)
+        
+        if len(faces) > 0:
+            blended_embedding = np.mean(embeddings, axis=0)
+            blended_face = Face(
+                bbox=faces[0].bbox,
+                kps=faces[0].kps,
+                det_score=faces[0].det_score,
+                landmark_3d_68=faces[0].landmark_3d_68,
+                pose=faces[0].pose,
+                landmark_2d_106=faces[0].landmark_2d_106,
+                embedding=blended_embedding,
+                gender=faces[0].gender,
+                age=faces[0].age
+            )
+            if blended_face is None:
+                no_face_msg = "Something went wrong, please try another set of images"
+                logger.error(no_face_msg)
+        if images is None:
+            logger.error("Please provide `images`")
+
+        return (input_image,blended_face)
+
+
 class BuildFaceModel:
     def __init__(self):
         self.output_dir = FACE_MODELS_PATH
@@ -1230,6 +1307,7 @@ NODE_CLASS_MAPPINGS = {
     "ReActorOptions": ReActorOptions,
     "ReActorFaceBoost": ReActorFaceBoost,
     "ReActorMaskHelper": MaskHelper,
+    "ReActorSetWeight": ReActorWeight,
     # --- Operations with Face Models ---
     "ReActorSaveFaceModel": SaveFaceModel,
     "ReActorLoadFaceModel": LoadFaceModel,
@@ -1249,6 +1327,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "ReActorOptions": "ReActor 🌌 Options",
     "ReActorFaceBoost": "ReActor 🌌 Face Booster",
     "ReActorMaskHelper": "ReActor 🌌 Masking Helper",
+    "ReActorSetWeight": "ReActor 🌌 Set Face Swap Weight",
     # --- Operations with Face Models ---
     "ReActorSaveFaceModel": "Save Face Model 🌌 ReActor",
     "ReActorLoadFaceModel": "Load Face Model 🌌 ReActor",
