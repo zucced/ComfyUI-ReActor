@@ -32,7 +32,3 @@ def nsfw_image(img_path: str, model_path: str):
             logger.status(f"NSFW content detected, skipping...")
             return True
         return False
-        if result[0]["label"] == "nsfw" and result[0]["score"] > SCORE:
-            logger.status(f"NSFW content detected, skipping...")
-            return True
-        return False
