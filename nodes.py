@@ -503,8 +503,11 @@ class ReActorWeight:
         return {
             "required": {
                 "input_image": ("IMAGE",),
+                "faceswap_weight": (["0%", "12.5%", "25%", "37.5%", "50%", "62.5%", "75%", "87.5%", "100%"], {"default": "50%"}),
+            },
+            "optional": {
                 "source_image": ("IMAGE",),
-                "faceswap_weight": ("INT", {"default": 50, "min": 10, "max": 100, "step": 10}),
+                "face_model": ("FACE_MODEL",),
             }
         }
     
@@ -516,41 +519,63 @@ class ReActorWeight:
 
     CATEGORY = "🌌 ReActor"
 
-    def set_weight(self, input_image, source_image, faceswap_weight):
-        weight = faceswap_weight
-        # print(f"weight = {weight}")
-        if weight == 100:
-            images = [source_image]
+    def set_weight(self, input_image, faceswap_weight, face_model=None, source_image=None):
+
+        if input_image is None:
+            logger.error("Please provide `input_image`")
+            return (input_image,None)
+        
+        if source_image is None and face_model is None:
+            logger.error("Please provide `source_image` or `face_model`")
+            return (input_image,None)
+
+        weight = float(faceswap_weight.split("%")[0])
+
+        images = []
+        faces = [] if face_model is None else [face_model]
+        embeddings = [] if face_model is None else [face_model.embedding]
+
+        if weight == 0:
+            images = [input_image]
+            faces = []
+            embeddings = []
+        elif weight == 100:
+            if face_model is None:
+                images = [source_image]
         else:
             if weight > 50:
                 images = [input_image]
                 count = round(100/(100-weight))
             else:
-                images = [source_image]
+                if face_model is None:
+                    images = [source_image]
                 count = round(100/(weight))
-            print(f"count = {count}")
-            for i in range(count-2):
+            for i in range(count-1):
                 if weight > 50:
-                    images.append(source_image)
+                    if face_model is None:
+                        images.append(source_image)
+                    else:
+                        faces.append(face_model)
+                        embeddings.append(face_model.embedding)
                 else:
                     images.append(input_image)
         
-        faces = []
-        embeddings = []
         images_list: List[Image.Image] = []
 
         apply_patch(1)
 
-        for image in images:
-            img = tensor_to_pil(image)
-            images_list.append(img)
+        if len(images) > 0:
 
-        for image in images_list:
-            face = BuildFaceModel.build_face_model(self,image)
-            if isinstance(face, str):
-                continue
-            faces.append(face)
-            embeddings.append(face.embedding)
+            for image in images:
+                img = tensor_to_pil(image)
+                images_list.append(img)
+
+            for image in images_list:
+                face = BuildFaceModel.build_face_model(self,image)
+                if isinstance(face, str):
+                    continue
+                faces.append(face)
+                embeddings.append(face.embedding)
         
         if len(faces) > 0:
             blended_embedding = np.mean(embeddings, axis=0)
@@ -568,8 +593,6 @@ class ReActorWeight:
             if blended_face is None:
                 no_face_msg = "Something went wrong, please try another set of images"
                 logger.error(no_face_msg)
-        if images is None:
-            logger.error("Please provide `images`")
 
         return (input_image,blended_face)
 
